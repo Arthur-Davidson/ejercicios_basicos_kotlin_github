@@ -1,0 +1,31 @@
+/* Codigo de David A. Padilla #229764 */
+fun main() {
+    
+    //Variables Implicitas
+    var nombre = "David"
+    var genero = "Masculino"
+    var carrera = "DDMI"
+    var semestre = 6
+    var estatura = 1.67
+    
+    //Variables Explicitas
+    var segundo_nombre: String? = "Arturo"
+    var edad: Int = 21
+    var color_cabello: String? = "Moreno"
+    var es_estudiante: Boolean = true
+    var trabaja: Boolean = true
+    
+    //Constantes Implicitas
+    val pais = "Mexico"
+    val año_actual = 2025
+    val es_mayor_de_edad = true
+    val pi = 3.1416
+    val gravedad = 9.81
+
+    //Constantes Explicitas
+    val es_admin: Boolean = false
+    val dias_semana: Int = 7
+    val ciudad: String = "Juarez"
+    val iva: Int = 16
+    val sistema_operativo: String? = "Android"
+}
