@@ -1,0 +1,86 @@
+// "Transformers One" (2024)
+// Personajes principales: Orion Pax, D16, Bee, Elita-1 y Sentinel Prime
+
+// Clase base
+open class Transformer(val nombre: String) {
+    open fun transformarse(): String {
+        return "$nombre se transforma en modo alterno."
+    }
+}
+
+// Clases derivadas con habilidades únicas
+
+class OrionPax : Transformer("Orion Pax") {
+    fun analizar(): String {
+        return "$nombre está analizando la situación con lógica y calma."
+    }
+
+    override fun transformarse(): String {
+        return "$nombre se transforma en un vehículo de transporte pacífico."
+    }
+}
+
+class D16 : Transformer("D16") {
+    fun disparar(): String {
+        return "$nombre dispara con precisión y poder destructivo."
+    }
+
+    override fun transformarse(): String {
+        return "$nombre se transforma en una máquina de guerra imponente."
+    }
+}
+
+class Bee : Transformer("Bee") {
+    fun atacar(): String {
+        return "$nombre ataca con velocidad y agilidad."
+    }
+
+    override fun transformarse(): String {
+        return "$nombre se transforma en un auto deportivo veloz."
+    }
+}
+
+class Elita1 : Transformer("Elita-1") {
+    fun patear(): String {
+        return "$nombre lanza una patada giratoria con fuerza y estilo."
+    }
+
+    override fun transformarse(): String {
+        return "$nombre se transforma en una nave de reconocimiento elegante."
+    }
+}
+
+class Sentinel : Transformer("Sentinel Prime") {
+    fun volar(): String {
+        return "$nombre activa sus propulsores y vuela sobre Cybertron."
+    }
+
+    override fun transformarse(): String {
+        return "$nombre se transforma en una nave de combate aérea."
+    }
+}
+
+// Función principal
+fun main() {
+    val orion = OrionPax()
+    val megatron = D16()
+    val bee = Bee()
+    val elita = Elita1()
+    val sentinel = Sentinel()
+
+    // Acciones
+    println(orion.transformarse())
+    println(orion.analizar())
+
+    println(megatron.transformarse())
+    println(megatron.disparar())
+
+    println(bee.transformarse())
+    println(bee.atacar())
+
+    println(elita.transformarse())
+    println(elita.patear())
+
+    println(sentinel.transformarse())
+    println(sentinel.volar())
+}
