@@ -1,0 +1,230 @@
+enum class EstadosBebes {
+    despierto, 
+    llorando, 
+    dormido, 
+    comiendo, 
+    poposeado,
+    limpio,
+    viendo_paw_patrol, 
+    tieso, 
+    feliz, 
+    jugando, 
+    llorando_de_risa, 
+    molesto
+}
+ 
+class Bebe(
+    var nombre: String,
+    var hambre: Int,
+    var panal_lleno: Int,
+    var sueno: Int,
+    var estado: EstadosBebes = EstadosBebes.despierto
+) {
+    fun alimentar() {
+        if (estado != EstadosBebes.tieso) {
+            estado = EstadosBebes.comiendo
+            hambre -= 40
+        } else {
+            return
+        }
+    }
+ 
+    fun dormir() {
+        if ((estado == EstadosBebes.despierto || estado == EstadosBebes.comiendo) && sueno > 49 && estado != EstadosBebes.tieso) {
+            sueno = 0
+            estado = EstadosBebes.dormido
+        } else {
+            return
+        }
+    }
+ 
+    fun despertar() {
+        if (estado == EstadosBebes.dormido || estado == EstadosBebes.tieso) {
+            estado = EstadosBebes.despierto
+        } else {
+            return
+        }
+    }
+ 
+    fun despertar_con_agua() {
+        estado = EstadosBebes.tieso
+    }
+ 
+    fun llorar() {
+        if (estado != EstadosBebes.tieso) {
+            estado = EstadosBebes.llorando
+            hambre += 10
+            panal_lleno += 5
+        } else {
+            return
+        }
+    }
+ 
+    fun jugar() {
+        if (estado != EstadosBebes.tieso && estado != EstadosBebes.dormido) {
+            estado = EstadosBebes.jugando
+            hambre += 5
+            panal_lleno += 2
+        } else {
+            return
+        }
+    }
+ 
+    fun verPawPatrol() {
+        if (estado != EstadosBebes.tieso) {
+            estado = EstadosBebes.viendo_paw_patrol
+            hambre += 3
+            panal_lleno += 2
+        } else {
+            return
+        }
+    }
+ 
+    fun cambiarPanal() {
+        if (panal_lleno > 70) {
+            estado = EstadosBebes.poposeado
+            println("$nombre necesita cambiar el pañal.")
+            panal_lleno = 0
+        } else {
+            estado = EstadosBebes.limpio
+            println("$nombre tiene el pañal limpio.")
+        }
+    }
+ 
+    // Función para poner al bebé feliz
+    fun hacerFeliz() {
+        if (estado != EstadosBebes.tieso) {
+            estado = EstadosBebes.feliz
+            println("$nombre esta feliz ahora.")
+        } else {
+            return
+        }
+    }
+ 
+    // Función para llorar de risa
+    fun llorarDeRisa() {
+        if (estado != EstadosBebes.tieso) {
+            estado = EstadosBebes.llorando_de_risa
+            println("$nombre esta llorando de risa!")
+            hambre -= 5
+            panal_lleno -= 2
+        } else {
+            return
+        }
+    }
+ 
+    // Función para poner molesto al bebé
+    fun ponerMolesto() {
+        if (estado != EstadosBebes.tieso) {
+            estado = EstadosBebes.molesto
+            println("$nombre esta molesto.")
+        } else {
+            return
+        }
+    }
+ 
+    fun actualizar_estado() {
+        when (estado) {
+            EstadosBebes.despierto -> {
+                sueno += 5
+                hambre += 5
+                panal_lleno += 3
+            }
+            EstadosBebes.comiendo -> {
+                hambre -= 40
+            }
+            EstadosBebes.llorando -> {
+                hambre += 10
+                panal_lleno += 5
+            }
+            EstadosBebes.jugando -> {
+                hambre += 5
+                panal_lleno += 2
+            }
+            EstadosBebes.viendo_paw_patrol -> {
+                hambre += 3
+                panal_lleno += 2
+            }
+            else -> {
+                // En otros estados no actualizamos nada
+            }
+        }
+    }
+ 
+    fun estado_actual(): String {
+        return when (estado) {
+            EstadosBebes.despierto -> "El bebe esta despierto."
+            EstadosBebes.tieso -> "El bebe esta tieso x_X."
+            EstadosBebes.dormido -> "El bebe esta mimido."
+            EstadosBebes.comiendo -> "El bebe esta comiendose un manguito, CLASIKO."
+            EstadosBebes.llorando -> "El bebe esta llorando."
+            EstadosBebes.jugando -> "El bebe esta jugando bien agustin."
+            EstadosBebes.viendo_paw_patrol -> "El bebe esta viendo Paw Patrol."
+            EstadosBebes.poposeado -> "El bebe esta jediondo."
+            EstadosBebes.limpio -> "El bebe esta fresco como lechuga."
+            EstadosBebes.feliz -> "El bebe esta feliz como una lombriz."
+            EstadosBebes.llorando_de_risa -> "El bebe esta llorando de risa."
+            EstadosBebes.molesto -> "El bebe ta'enojao."
+        }
+    }
+}
+ 
+fun main() {
+    // Primer bebe
+    val GuillermoJarias = Bebe("Guillermo Jarias", 50, 10, 70)
+    println("Ha nacido un bebe, su nombre es: ${GuillermoJarias.nombre}")
+    GuillermoJarias.actualizar_estado()
+    println("El estado del bebe es ${GuillermoJarias.estado_actual()}")
+ 
+    // Modificar estados del primer bebe
+    GuillermoJarias.dormir()
+    println("El estado del bebe es ${GuillermoJarias.estado_actual()}")
+    GuillermoJarias.despertar()
+    println("El estado del bebe es ${GuillermoJarias.estado_actual()}")
+    GuillermoJarias.verPawPatrol()
+    println("El estado del bebe es ${GuillermoJarias.estado_actual()}")
+    GuillermoJarias.llorarDeRisa()
+    println("El estado del bebe es ${GuillermoJarias.estado_actual()}")
+ 
+    GuillermoJarias.alimentar()
+    println("El estado del bebe es ${GuillermoJarias.estado_actual()}")
+ 
+    GuillermoJarias.llorar()
+    println("El estado del bebe es ${GuillermoJarias.estado_actual()}")
+    GuillermoJarias.despertar_con_agua()
+    println("El estado del bebe es ${GuillermoJarias.estado_actual()}")
+    GuillermoJarias.despertar()
+    println("El estado del bebe es ${GuillermoJarias.estado_actual()}")
+ 
+    println("")
+    // Segundo bebé
+    val EduardoCota = Bebe("Eduardo Cota", 60, 20, 80)
+    println("Ha nacido un bebe, su nombre es: ${EduardoCota.nombre}")
+    EduardoCota.actualizar_estado()
+    println("El estado del bebe es ${EduardoCota.estado_actual()}")
+ 
+    EduardoCota.jugar()
+    println("El estado del bebe es ${EduardoCota.estado_actual()}")
+ 
+    EduardoCota.verPawPatrol()
+    println("El estado del bebe es ${EduardoCota.estado_actual()}")
+    EduardoCota.alimentar()
+    println("El estado del bebe es ${EduardoCota.estado_actual()}")
+    EduardoCota.cambiarPanal()
+ 
+    EduardoCota.hacerFeliz()
+    println("El estado del bebe es ${EduardoCota.estado_actual()}")
+ 
+    EduardoCota.ponerMolesto()
+    println("El estado del bebe es ${EduardoCota.estado_actual()}")
+    EduardoCota.llorar()
+    println("El estado del bebe es ${EduardoCota.estado_actual()}")
+ 
+    EduardoCota.dormir()
+    println("El estado del bebe es ${EduardoCota.estado_actual()}")
+    EduardoCota.despertar_con_agua()
+    println("El estado del bebe es ${EduardoCota.estado_actual()}")
+    EduardoCota.jugar()
+    println("El estado del bebe es ${EduardoCota.estado_actual()}")
+ 
+}
