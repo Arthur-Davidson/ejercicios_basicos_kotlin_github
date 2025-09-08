@@ -1,230 +1,214 @@
-enum class EstadosBebes {
-    despierto, 
-    llorando, 
-    dormido, 
-    comiendo, 
-    poposeado,
-    limpio,
-    viendo_paw_patrol, 
-    tieso, 
-    feliz, 
-    jugando, 
-    llorando_de_risa, 
-    molesto
+/* Estados del bebe */
+enum class EstadoBebe {
+    despierto, mimido, comiendo, limpio,
+    sucio, llorando, viendoPocoyo, muerto, 
+    feliz, jugando, riendo, molesto
 }
  
+/* La clase del bebe */
 class Bebe(
     var nombre: String,
     var hambre: Int,
-    var panal_lleno: Int,
+    var suciedad: Int,
     var sueno: Int,
-    var estado: EstadosBebes = EstadosBebes.despierto
-) {
-    fun alimentar() {
-        if (estado != EstadosBebes.tieso) {
-            estado = EstadosBebes.comiendo
-            hambre -= 40
-        } else {
-            return
-        }
-    }
- 
+    var estado: EstadoBebe = EstadoBebe.despierto
+)
+{
+/* Dormido y despierto */
     fun dormir() {
-        if ((estado == EstadosBebes.despierto || estado == EstadosBebes.comiendo) && sueno > 49 && estado != EstadosBebes.tieso) {
-            sueno = 0
-            estado = EstadosBebes.dormido
+        if ((estado == EstadoBebe.despierto || estado == EstadoBebe.comiendo)
+&& sueno > 49 && estado != EstadoBebe.muerto) {
+            estado = EstadoBebe.mimido
         } else {
             return
         }
     }
- 
     fun despertar() {
-        if (estado == EstadosBebes.dormido || estado == EstadosBebes.tieso) {
-            estado = EstadosBebes.despierto
+        if (estado == EstadoBebe.mimido || estado == EstadoBebe.muerto) {
+            estado = EstadoBebe.despierto
         } else {
             return
         }
     }
- 
-    fun despertar_con_agua() {
-        estado = EstadosBebes.tieso
-    }
- 
-    fun llorar() {
-        if (estado != EstadosBebes.tieso) {
-            estado = EstadosBebes.llorando
-            hambre += 10
-            panal_lleno += 5
+/* Acciones que benefician al bebe */ 
+    fun alimentar() {
+        if (estado != EstadoBebe.muerto) {
+            estado = EstadoBebe.comiendo
         } else {
             return
         }
     }
- 
-    fun jugar() {
-        if (estado != EstadosBebes.tieso && estado != EstadosBebes.dormido) {
-            estado = EstadosBebes.jugando
-            hambre += 5
-            panal_lleno += 2
-        } else {
-            return
-        }
-    }
- 
-    fun verPawPatrol() {
-        if (estado != EstadosBebes.tieso) {
-            estado = EstadosBebes.viendo_paw_patrol
-            hambre += 3
-            panal_lleno += 2
-        } else {
-            return
-        }
-    }
- 
     fun cambiarPanal() {
-        if (panal_lleno > 70) {
-            estado = EstadosBebes.poposeado
+        if (suciedad > 70) {
+            estado = EstadoBebe.sucio
             println("$nombre necesita cambiar el pañal.")
-            panal_lleno = 0
+            suciedad = 0
         } else {
-            estado = EstadosBebes.limpio
+            estado = EstadoBebe.limpio
             println("$nombre tiene el pañal limpio.")
         }
     }
+    fun jugar() {
+        if (estado != EstadoBebe.muerto && estado != EstadoBebe.mimido) {
+            estado = EstadoBebe.jugando
+        } else {
+            return
+        }
+    }
+    fun verTele() {
+        if (estado != EstadoBebe.muerto) {
+            estado = EstadoBebe.viendoPocoyo
+        } else {
+            return
+        }
+    }
  
-    // Función para poner al bebé feliz
     fun hacerFeliz() {
-        if (estado != EstadosBebes.tieso) {
-            estado = EstadosBebes.feliz
-            println("$nombre esta feliz ahora.")
+        if (estado != EstadoBebe.muerto) {
+            estado = EstadoBebe.feliz
         } else {
             return
         }
     }
  
-    // Función para llorar de risa
-    fun llorarDeRisa() {
-        if (estado != EstadosBebes.tieso) {
-            estado = EstadosBebes.llorando_de_risa
-            println("$nombre esta llorando de risa!")
-            hambre -= 5
-            panal_lleno -= 2
+    fun hacerleCosquillas() {
+        if (estado != EstadoBebe.muerto) {
+            estado = EstadoBebe.riendo
         } else {
             return
         }
     }
  
-    // Función para poner molesto al bebé
+/* Acciones que perjudican al bebe */
+    fun llorar() {
+        if (estado != EstadoBebe.muerto) {
+            estado = EstadoBebe.llorando
+        } else {
+            return
+        }
+    }
     fun ponerMolesto() {
-        if (estado != EstadosBebes.tieso) {
-            estado = EstadosBebes.molesto
-            println("$nombre esta molesto.")
+        if (estado != EstadoBebe.muerto) {
+            estado = EstadoBebe.molesto
+            println("$nombre ya se enchucho.")
         } else {
             return
         }
     }
- 
-    fun actualizar_estado() {
+    fun conectarleSurdazo() {
+        estado = EstadoBebe.muerto
+    }
+/* Actualizar y ver el estado del bebe*/
+    fun revisarBebe() {
         when (estado) {
-            EstadosBebes.despierto -> {
-                sueno += 5
+            EstadoBebe.mimido -> {
+                sueno = 0
+            }
+            EstadoBebe.despierto -> {
+                sueno += 3
                 hambre += 5
-                panal_lleno += 3
+                suciedad += 3
             }
-            EstadosBebes.comiendo -> {
-                hambre -= 40
-            }
-            EstadosBebes.llorando -> {
-                hambre += 10
-                panal_lleno += 5
-            }
-            EstadosBebes.jugando -> {
+            EstadoBebe.jugando -> {
                 hambre += 5
-                panal_lleno += 2
+                suciedad += 2
             }
-            EstadosBebes.viendo_paw_patrol -> {
+            EstadoBebe.viendoPocoyo -> {
                 hambre += 3
-                panal_lleno += 2
+            }
+            EstadoBebe.feliz -> {
+                sueno -= 5
+            }
+            EstadoBebe.riendo -> {
+                hambre -= 5
+            }
+            EstadoBebe.llorando -> {
+                hambre += 10
+                suciedad += 5
+            }
+            EstadoBebe.molesto -> {
+                hambre += 10
             }
             else -> {
-                // En otros estados no actualizamos nada
+            //No pasa nada
             }
         }
     }
- 
-    fun estado_actual(): String {
+    fun estadoActual(): String {
         return when (estado) {
-            EstadosBebes.despierto -> "El bebe esta despierto."
-            EstadosBebes.tieso -> "El bebe esta tieso x_X."
-            EstadosBebes.dormido -> "El bebe esta mimido."
-            EstadosBebes.comiendo -> "El bebe esta comiendose un manguito, CLASIKO."
-            EstadosBebes.llorando -> "El bebe esta llorando."
-            EstadosBebes.jugando -> "El bebe esta jugando bien agustin."
-            EstadosBebes.viendo_paw_patrol -> "El bebe esta viendo Paw Patrol."
-            EstadosBebes.poposeado -> "El bebe esta jediondo."
-            EstadosBebes.limpio -> "El bebe esta fresco como lechuga."
-            EstadosBebes.feliz -> "El bebe esta feliz como una lombriz."
-            EstadosBebes.llorando_de_risa -> "El bebe esta llorando de risa."
-            EstadosBebes.molesto -> "El bebe ta'enojao."
+            EstadoBebe.despierto -> "El bebe esta despierto."
+            EstadoBebe.muerto -> "El bebe esta tieso x_X."
+            EstadoBebe.mimido -> "El bebe esta mimido."
+            EstadoBebe.comiendo -> "El bebe esta comiendose un manguito, CLASIKO."
+            EstadoBebe.llorando -> "El bebe esta llorando."
+            EstadoBebe.jugando -> "El bebe esta jugando bien agustin."
+            EstadoBebe.viendoPocoyo -> "El bebe esta viendo Pocoyo."
+            EstadoBebe.sucio -> "El bebe esta jediondo."
+            EstadoBebe.limpio -> "El bebe esta fresco como lechuga."
+            EstadoBebe.feliz -> "El bebe esta feliz como una lombriz."
+            EstadoBebe.riendo -> "El bebe esta llorando de risa."
+            EstadoBebe.molesto -> "El bebe ta'enojao."
         }
     }
 }
- 
 fun main() {
     // Primer bebe
     val GuillermoJarias = Bebe("Guillermo Jarias", 50, 10, 70)
     println("Ha nacido un bebe, su nombre es: ${GuillermoJarias.nombre}")
-    GuillermoJarias.actualizar_estado()
-    println("El estado del bebe es ${GuillermoJarias.estado_actual()}")
- 
-    // Modificar estados del primer bebe
+    GuillermoJarias.revisarBebe()
+    println("El estado del bebe es ${GuillermoJarias.estadoActual()}")
     GuillermoJarias.dormir()
-    println("El estado del bebe es ${GuillermoJarias.estado_actual()}")
+    GuillermoJarias.revisarBebe()
+    println("El estado del bebe es ${GuillermoJarias.estadoActual()}")
     GuillermoJarias.despertar()
-    println("El estado del bebe es ${GuillermoJarias.estado_actual()}")
-    GuillermoJarias.verPawPatrol()
-    println("El estado del bebe es ${GuillermoJarias.estado_actual()}")
-    GuillermoJarias.llorarDeRisa()
-    println("El estado del bebe es ${GuillermoJarias.estado_actual()}")
- 
+    GuillermoJarias.revisarBebe()
+    println("El estado del bebe es ${GuillermoJarias.estadoActual()}")
+    GuillermoJarias.verTele()
+    GuillermoJarias.revisarBebe()
+    println("El estado del bebe es ${GuillermoJarias.estadoActual()}")
+    GuillermoJarias.hacerleCosquillas()
+    GuillermoJarias.revisarBebe()
+    println("El estado del bebe es ${GuillermoJarias.estadoActual()}")
     GuillermoJarias.alimentar()
-    println("El estado del bebe es ${GuillermoJarias.estado_actual()}")
- 
+    GuillermoJarias.revisarBebe()
+    println("El estado del bebe es ${GuillermoJarias.estadoActual()}")
     GuillermoJarias.llorar()
-    println("El estado del bebe es ${GuillermoJarias.estado_actual()}")
-    GuillermoJarias.despertar_con_agua()
-    println("El estado del bebe es ${GuillermoJarias.estado_actual()}")
+    GuillermoJarias.revisarBebe()
+    println("El estado del bebe es ${GuillermoJarias.estadoActual()}")
+    GuillermoJarias.conectarleSurdazo()
+    GuillermoJarias.revisarBebe()
+    println("El estado del bebe es ${GuillermoJarias.estadoActual()}")
     GuillermoJarias.despertar()
-    println("El estado del bebe es ${GuillermoJarias.estado_actual()}")
- 
+    println("El estado del bebe es ${GuillermoJarias.estadoActual()}")
     println("")
-    // Segundo bebé
+    // Segundo Bebe
     val EduardoCota = Bebe("Eduardo Cota", 60, 20, 80)
     println("Ha nacido un bebe, su nombre es: ${EduardoCota.nombre}")
-    EduardoCota.actualizar_estado()
-    println("El estado del bebe es ${EduardoCota.estado_actual()}")
- 
+    EduardoCota.revisarBebe()
+    println("El estado del bebe es ${EduardoCota.estadoActual()}")
     EduardoCota.jugar()
-    println("El estado del bebe es ${EduardoCota.estado_actual()}")
- 
-    EduardoCota.verPawPatrol()
-    println("El estado del bebe es ${EduardoCota.estado_actual()}")
+    EduardoCota.revisarBebe()
+    println("El estado del bebe es ${EduardoCota.estadoActual()}")
+    EduardoCota.verTele()
+    EduardoCota.revisarBebe()
+    println("El estado del bebe es ${EduardoCota.estadoActual()}")
     EduardoCota.alimentar()
-    println("El estado del bebe es ${EduardoCota.estado_actual()}")
+    EduardoCota.revisarBebe()
+    println("El estado del bebe es ${EduardoCota.estadoActual()}")
     EduardoCota.cambiarPanal()
- 
+    EduardoCota.revisarBebe()
     EduardoCota.hacerFeliz()
-    println("El estado del bebe es ${EduardoCota.estado_actual()}")
- 
+    EduardoCota.revisarBebe()
+    println("El estado del bebe es ${EduardoCota.estadoActual()}")
     EduardoCota.ponerMolesto()
-    println("El estado del bebe es ${EduardoCota.estado_actual()}")
+    EduardoCota.revisarBebe()
+    println("El estado del bebe es ${EduardoCota.estadoActual()}")
     EduardoCota.llorar()
-    println("El estado del bebe es ${EduardoCota.estado_actual()}")
- 
-    EduardoCota.dormir()
-    println("El estado del bebe es ${EduardoCota.estado_actual()}")
-    EduardoCota.despertar_con_agua()
-    println("El estado del bebe es ${EduardoCota.estado_actual()}")
+    EduardoCota.revisarBebe()
+    println("El estado del bebe es ${EduardoCota.estadoActual()}")
+    EduardoCota.conectarleSurdazo()
+    EduardoCota.revisarBebe()
+    println("El estado del bebe es ${EduardoCota.estadoActual()}")
     EduardoCota.jugar()
-    println("El estado del bebe es ${EduardoCota.estado_actual()}")
- 
+    println("El estado del bebe es ${EduardoCota.estadoActual()}")
 }
