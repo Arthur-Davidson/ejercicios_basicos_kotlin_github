@@ -1,10 +1,19 @@
-/* Estados del bebe */
-enum class EstadoBebe {
-    despierto, mimido, comiendo, limpio,
-    sucio, llorando, viendoPocoyo, muerto, 
-    feliz, jugando, riendo, molesto
+enum class EstadosBebes {
+    despierto,
+    llorando,
+    dormido,
+    comiendo,
+    poposeado,
+    limpio,
+    viendo_paw_patrol,
+    tieso,
+    feliz,
+    jugando,
+    llorando_de_risa,
+    molesto
 }
 
+// Interfaz de Habilidades y SuperPoderes
 interface Habilidad {
     var nombre: String
     var activo: Boolean
@@ -50,21 +59,6 @@ interface Habilidades {
     }
 }
 
-/* Clase Camisa */
-class Camisa(val color: String, val diseño: String) {
-    fun usar() {
-        println("La camisa de color $color y diseño '$diseño' está siendo usada.")
-    }
-}
-
-/* Clase Pañal */
-class Panal(val marca: String, val color: String) {
-    fun usar() {
-        println("El pañal de marca $marca y color $color está siendo usado.")
-    }
-}
-
-/* Clase Super Poder */
 class SuperPoder(
     override var nombre: String,
     override var activo: Boolean,
@@ -72,168 +66,153 @@ class SuperPoder(
 ) : Habilidad
 
 
-/* La clase del bebe */
+// Clase Bebe con habilidades
 class Bebe(
     var nombre: String,
     var hambre: Int,
-    var suciedad: Int,
+    var panal_lleno: Int,
     var sueno: Int,
-    var estado: EstadoBebe = EstadoBebe.despierto,
-    
-    val camisa: Camisa,   
-    val panal: Panal
-    
+    var estado: EstadosBebes = EstadosBebes.despierto
 ) : Habilidades {
 
     override var capacidades: MutableList<Habilidad> = mutableListOf()
 
-/* Dormido y despierto */
-    fun dormir() {
-        if ((estado == EstadoBebe.despierto || estado == EstadoBebe.comiendo)
-        && sueno > 49 && estado != EstadoBebe.muerto) {
-            estado = EstadoBebe.mimido
-        } else {
-            return
-        }
-    }
-    fun despertar() {
-        if (estado == EstadoBebe.mimido || estado == EstadoBebe.muerto) {
-            estado = EstadoBebe.despierto
-        } else {
-            return
-        }
-    }
-/* Acciones que benefician al bebe */ 
     fun alimentar() {
-        if (estado != EstadoBebe.muerto) {
-            estado = EstadoBebe.comiendo
-        } else {
-            return
+        if (estado != EstadosBebes.tieso) {
+            estado = EstadosBebes.comiendo
+            hambre = (hambre - 40).coerceAtLeast(0)
         }
     }
-    fun cambiarPanal() {
-        if (suciedad > 70) {
-            estado = EstadoBebe.sucio
-            println("$nombre necesita cambiar el pañal.")
-            panal.usar()  
-            suciedad = 0
-        } else {
-            estado = EstadoBebe.limpio
-            println("$nombre tiene el pañal limpio.")
-            panal.usar()  
+
+    fun dormir() {
+        if ((estado == EstadosBebes.despierto || estado == EstadosBebes.comiendo) && sueno > 49 && estado != EstadosBebes.tieso) {
+            sueno = 0
+            estado = EstadosBebes.dormido
         }
     }
-    
-    fun vestirse() {
-        println("$nombre se está vistiendo...")
-        camisa.usar()
-    }
-    
-    fun jugar() {
-        if (estado != EstadoBebe.muerto && estado != EstadoBebe.mimido) {
-            estado = EstadoBebe.jugando
-        } else {
-            return
+
+    fun despertar() {
+        if (estado == EstadosBebes.dormido || estado == EstadosBebes.tieso) {
+            estado = EstadosBebes.despierto
         }
     }
-    fun verTele() {
-        if (estado != EstadoBebe.muerto) {
-            estado = EstadoBebe.viendoPocoyo
-        } else {
-            return
-        }
+
+    fun despertar_con_agua() {
+        estado = EstadosBebes.tieso
     }
- 
-    fun hacerFeliz() {
-        if (estado != EstadoBebe.muerto) {
-            estado = EstadoBebe.feliz
-        } else {
-            return
-        }
-    }
- 
-    fun hacerleCosquillas() {
-        if (estado != EstadoBebe.muerto) {
-            estado = EstadoBebe.riendo
-        } else {
-            return
-        }
-    }
- 
-/* Acciones que perjudican al bebe */
+
     fun llorar() {
-        if (estado != EstadoBebe.muerto) {
-            estado = EstadoBebe.llorando
-        } else {
-            return
+        if (estado != EstadosBebes.tieso) {
+            estado = EstadosBebes.llorando
+            hambre = (hambre + 10).coerceAtMost(100)
+            panal_lleno = (panal_lleno + 5).coerceAtMost(100)
         }
     }
+
+    fun jugar() {
+        if (estado != EstadosBebes.tieso && estado != EstadosBebes.dormido) {
+            estado = EstadosBebes.jugando
+            hambre = (hambre + 5).coerceAtMost(100)
+            panal_lleno = (panal_lleno + 2).coerceAtMost(100)
+        }
+    }
+
+    fun verPawPatrol() {
+        if (estado != EstadosBebes.tieso) {
+            estado = EstadosBebes.viendo_paw_patrol
+            hambre = (hambre + 3).coerceAtMost(100)
+            panal_lleno = (panal_lleno + 2).coerceAtMost(100)
+        }
+    }
+
+    fun cambiarPanal() {
+        if (panal_lleno > 70) {
+            estado = EstadosBebes.poposeado
+            println("$nombre necesita cambiar el pañal.")
+            panal_lleno = 0
+        } else {
+            estado = EstadosBebes.limpio
+            println("$nombre tiene el pañal limpio.")
+        }
+    }
+
+    fun hacerFeliz() {
+        if (estado != EstadosBebes.tieso) {
+            estado = EstadosBebes.feliz
+            println("$nombre está feliz ahora.")
+        }
+    }
+
+    fun llorarDeRisa() {
+        if (estado != EstadosBebes.tieso) {
+            estado = EstadosBebes.llorando_de_risa
+            println("$nombre está llorando de risa!")
+            hambre = (hambre - 5).coerceAtLeast(0)
+            panal_lleno = (panal_lleno - 2).coerceAtLeast(0)
+        }
+    }
+
     fun ponerMolesto() {
-        if (estado != EstadoBebe.muerto) {
-            estado = EstadoBebe.molesto
-            println("$nombre ya se enchucho.")
-        } else {
-            return
+        if (estado != EstadosBebes.tieso) {
+            estado = EstadosBebes.molesto
+            println("$nombre está molesto.")
         }
     }
-    fun conectarleSurdazo() {
-        estado = EstadoBebe.muerto
-    }
-/* Actualizar y ver el estado del bebe*/
-    fun revisarBebe() {
+
+    fun actualizar_estado() {
         when (estado) {
-            EstadoBebe.mimido -> {
-                sueno = 0
-            }
-            EstadoBebe.despierto -> {
-                sueno += 3
+            EstadosBebes.despierto -> {
+                sueno += 5
                 hambre += 5
-                suciedad += 3
+                panal_lleno += 3
             }
-            EstadoBebe.jugando -> {
-                hambre += 5
-                suciedad += 2
+            EstadosBebes.comiendo -> {
+                hambre = (hambre - 40).coerceAtLeast(0)
             }
-            EstadoBebe.viendoPocoyo -> {
-                hambre += 3
+            EstadosBebes.llorando -> {
+                hambre = (hambre + 10).coerceAtMost(100)
+                panal_lleno = (panal_lleno + 5).coerceAtMost(100)
             }
-            EstadoBebe.feliz -> {
-                sueno -= 5
+            EstadosBebes.jugando -> {
+                hambre = (hambre + 5).coerceAtMost(100)
+                panal_lleno = (panal_lleno + 2).coerceAtMost(100)
             }
-            EstadoBebe.riendo -> {
-                hambre -= 5
-            }
-            EstadoBebe.llorando -> {
-                hambre += 10
-                suciedad += 5
-            }
-            EstadoBebe.molesto -> {
-                hambre += 10
+            EstadosBebes.viendo_paw_patrol -> {
+                hambre = (hambre + 3).coerceAtMost(100)
+                panal_lleno = (panal_lleno + 2).coerceAtMost(100)
             }
             else -> {
-            /* No pasa nada */
+                
             }
         }
     }
-    fun estadoActual(): String {
+
+    fun estado_actual(): String {
         return when (estado) {
-            EstadoBebe.despierto -> "El bebe esta despierto."
-            EstadoBebe.muerto -> "El bebe esta tieso x_X."
-            EstadoBebe.mimido -> "El bebe esta mimido."
-            EstadoBebe.comiendo -> "El bebe esta comiendose un manguito, CLASIKO."
-            EstadoBebe.llorando -> "El bebe esta llorando."
-            EstadoBebe.jugando -> "El bebe esta jugando bien agustin."
-            EstadoBebe.viendoPocoyo -> "El bebe esta viendo Pocoyo."
-            EstadoBebe.sucio -> "El bebe esta jediondo."
-            EstadoBebe.limpio -> "El bebe esta fresco como lechuga."
-            EstadoBebe.feliz -> "El bebe esta feliz como una lombriz."
-            EstadoBebe.riendo -> "El bebe esta llorando de risa."
-            EstadoBebe.molesto -> "El bebe ta'enojao."
+            EstadosBebes.despierto -> "El bebe esta despierto."
+            EstadosBebes.tieso -> "El bebe esta tieso x_X."
+            EstadosBebes.dormido -> "El bebe esta mimido."
+            EstadosBebes.comiendo -> "El bebe esta comiendose un manguito, CLASIKO."
+            EstadosBebes.llorando -> "El bebe esta llorando."
+            EstadosBebes.jugando -> "El bebe esta jugando bien agustin."
+            EstadosBebes.viendo_paw_patrol -> "El bebe esta viendo Paw Patrol."
+            EstadosBebes.poposeado -> "El bebe esta jediondo."
+            EstadosBebes.limpio -> "El bebe esta fresco como lechuga."
+            EstadosBebes.feliz -> "El bebe esta feliz como una lombriz."
+            EstadosBebes.llorando_de_risa -> "El bebe esta llorando de risa."
+            EstadosBebes.molesto -> "El bebe ta'enojao."
         }
     }
+
+    fun estadisticas(): String {
+        return "Hambre: $hambre | Pañal: $panal_lleno | Sueño: $sueno"
+    }
 }
+
+//
+
 fun main() {
-    /* Crear superpoderes */
+    // Crear superpoderes
     val rayoLaser = SuperPoder("Rayos Láser", false, "Dispara rayos láser con los ojos.")
     val volar = SuperPoder("Volar", false, "Puede volar por los cielos.")
     val superfuerza = SuperPoder("Superfuerza", false, "Levanta objetos muy pesados.")
@@ -241,32 +220,28 @@ fun main() {
     val invisibilidad = SuperPoder("Invisibilidad", false, "Puede volverse invisible por completo.")
     val cambiartamano = SuperPoder("Cambio_de_tamano", false, "Cambia su tamanio ya sea de una hormiga a un edificio.")
 
-    // Crear camisas y pañales con los valores deseados
-    val camisa1 = Camisa("Azul", "SuperMan")
-    val panal1 = Panal("Pampers", "Amarillo")
+    // Crear bebés
+    val GuillermoJarias = Bebe("Guillermo Jarias", 50, 10, 70)
+    val EduardoCota = Bebe("Eduardo Cota", 60, 20, 80)
 
-    val camisa2 = Camisa("Rojo", "Los_Increibles")
-    val panal2 = Panal("Huggies", "Blanco")
-
-    /* Primer bebe */
-    val GuillermoJarias = Bebe("Guillermo Jarias", 50, 10, 70, estado = 
-    EstadoBebe.despierto, camisa = camisa1, panal = panal1)
-    /* Asignar poderes */
+    // Asignar poderes
     GuillermoJarias.agregar_capacidad(rayoLaser)
     GuillermoJarias.agregar_capacidad(volar)
     GuillermoJarias.agregar_capacidad(superfuerza)
-    
+
+    EduardoCota.agregar_capacidad(supervelocidad)
+    EduardoCota.agregar_capacidad(invisibilidad)
+    EduardoCota.agregar_capacidad(cambiartamano)
+
+    // Interacciones con Guillermo Jarias
     println("Ha nacido un bebe, su nombre es: ${GuillermoJarias.nombre}")
-    GuillermoJarias.revisarBebe()
+    println("Poderes de ${GuillermoJarias.nombre}: ${GuillermoJarias.descripcion()}")
     
-    GuillermoJarias.vestirse()
-    println("El estado del bebe es ${GuillermoJarias.estadoActual()}")
-    GuillermoJarias.dormir()
-    GuillermoJarias.revisarBebe()
-    println("El estado del bebe es ${GuillermoJarias.estadoActual()}")
-    GuillermoJarias.despertar()
-    
-    /* Activa sus poderes */
+    GuillermoJarias.actualizar_estado()
+    println(GuillermoJarias.estado_actual())
+    println(GuillermoJarias.estadisticas())
+
+    // Guillermo Jarias activa sus poderes
     GuillermoJarias.activar_capacidad("Rayos Láser")
     println("¿Rayos Láser activo? ${rayoLaser.activo}")
 
@@ -275,23 +250,18 @@ fun main() {
 
     GuillermoJarias.activar_capacidad("Superfuerza")
     println("¿Superfuerza activa? ${superfuerza.activo}")
-    
-    GuillermoJarias.revisarBebe()
-    println("El estado del bebe es ${GuillermoJarias.estadoActual()}")
-    GuillermoJarias.verTele()
-    GuillermoJarias.revisarBebe()
-    println("El estado del bebe es ${GuillermoJarias.estadoActual()}")
-    GuillermoJarias.hacerleCosquillas()
-    GuillermoJarias.revisarBebe()
-    println("El estado del bebe es ${GuillermoJarias.estadoActual()}")
+
+    GuillermoJarias.despertar()
+    println(GuillermoJarias.estado_actual())
+    GuillermoJarias.verPawPatrol()
+    println(GuillermoJarias.estado_actual())
+    GuillermoJarias.llorarDeRisa()
+    println(GuillermoJarias.estado_actual())
     GuillermoJarias.alimentar()
-    GuillermoJarias.revisarBebe()
-    println("El estado del bebe es ${GuillermoJarias.estadoActual()}")
-    GuillermoJarias.llorar()
-    GuillermoJarias.revisarBebe()
-    println("El estado del bebe es ${GuillermoJarias.estadoActual()}")
+    println(GuillermoJarias.estado_actual())
+    GuillermoJarias.dormir()
+    println(GuillermoJarias.estado_actual())
     
-    /* Desactivar poderes */
     GuillermoJarias.capacidades[0].desactivar()
     println("Rayos Láser activo? ${rayoLaser.activo}")
 
@@ -301,32 +271,21 @@ fun main() {
     GuillermoJarias.capacidades[2].desactivar()
     println("Superfuerza activo? ${superfuerza.activo}")
     
-    GuillermoJarias.cambiarPanal()
-    
-    GuillermoJarias.conectarleSurdazo()
-    GuillermoJarias.revisarBebe()
-    println("El estado del bebe es ${GuillermoJarias.estadoActual()}")
-    GuillermoJarias.despertar()
-    println("El estado del bebe es ${GuillermoJarias.estadoActual()}")
-    println("")
-    
-    /* Segundo Bebe */
-    val EduardoCota = Bebe("Eduardo Cota", 60, 20, 80, estado = 
-    EstadoBebe.despierto, camisa = camisa2, panal = panal2)
-    /* Asignar poderes */ 
-    EduardoCota.agregar_capacidad(supervelocidad)
-    EduardoCota.agregar_capacidad(invisibilidad)
-    EduardoCota.agregar_capacidad(cambiartamano)
-    
+    GuillermoJarias.despertar_con_agua()
+    println(GuillermoJarias.estado_actual())
+    GuillermoJarias.jugar()
+    println(GuillermoJarias.estado_actual())
+
+    println(" ")
+
+    // Interacciones con Eduardo Cota
     println("Ha nacido un bebe, su nombre es: ${EduardoCota.nombre}")
-    EduardoCota.revisarBebe()
-    EduardoCota.vestirse()
-    println("El estado del bebe es ${EduardoCota.estadoActual()}")
-    EduardoCota.jugar()
-    EduardoCota.revisarBebe()
-    println("El estado del bebe es ${EduardoCota.estadoActual()}")
+    println("Poderes de ${EduardoCota.nombre}: ${EduardoCota.descripcion()}")
     
-    /* Activa sus poderes */
+    EduardoCota.actualizar_estado()
+    println(EduardoCota.estado_actual())
+    println(GuillermoJarias.estadisticas())
+    
     EduardoCota.activar_capacidad("Supervelocidad")
     println("Supervelocidad activa? ${supervelocidad.activo}")
 
@@ -335,26 +294,22 @@ fun main() {
 
     EduardoCota.activar_capacidad("Cambio_de_tamano")
     println("Cambio de tamano activo? ${cambiartamano.activo}")
-    
-    EduardoCota.verTele()
-    EduardoCota.revisarBebe()
-    println("El estado del bebe es ${EduardoCota.estadoActual()}")
+
+    EduardoCota.jugar()
+    println(EduardoCota.estado_actual())
+    EduardoCota.verPawPatrol()
+    println(EduardoCota.estado_actual())
     EduardoCota.alimentar()
-    EduardoCota.revisarBebe()
-    println("El estado del bebe es ${EduardoCota.estadoActual()}")
+    println(EduardoCota.estado_actual())
     EduardoCota.cambiarPanal()
-    EduardoCota.revisarBebe()
+    println(EduardoCota.estado_actual())
     EduardoCota.hacerFeliz()
-    EduardoCota.revisarBebe()
-    println("El estado del bebe es ${EduardoCota.estadoActual()}")
+    println(EduardoCota.estado_actual())
     EduardoCota.ponerMolesto()
-    EduardoCota.revisarBebe()
-    println("El estado del bebe es ${EduardoCota.estadoActual()}")
+    println(EduardoCota.estado_actual())
     EduardoCota.llorar()
-    EduardoCota.revisarBebe()
-    println("El estado del bebe es ${EduardoCota.estadoActual()}")
+    println(EduardoCota.estado_actual())
     
-    /* Desactivar poderes */
     EduardoCota.capacidades[0].desactivar()
     println("¿Supervelocidad activo? ${supervelocidad.activo}")
 
@@ -364,11 +319,9 @@ fun main() {
     EduardoCota.capacidades[2].desactivar()
     println("¿Cambio_de_tamano activo? ${cambiartamano.activo}")
     
-    EduardoCota.cambiarPanal()
-    
-    EduardoCota.conectarleSurdazo()
-    EduardoCota.revisarBebe()
-    println("El estado del bebe es ${EduardoCota.estadoActual()}")
+    EduardoCota.despertar_con_agua()
+    println(EduardoCota.estado_actual())
     EduardoCota.jugar()
-    println("El estado del bebe es ${EduardoCota.estadoActual()}")
+    println(EduardoCota.estado_actual())
+
 }
